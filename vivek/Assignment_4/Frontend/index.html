@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html ng-app="quizApp">
+<head>
+    <title>Quiz Application - Ritesh Patil</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- <script src="app.js"></script> -->
+</head>
+<body ng-controller="QuizController">
+    <div class="container">
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn" ng-class="{active: activeTab === 'join'}" ng-click="setTab('join')">
+                Join Quiz
+            </button>
+            <button class="tab-btn" ng-class="{active: activeTab === 'create'}" ng-click="setTab('create')">
+                Create Quiz
+            </button>
+        </div>
+
+        <!-- Join Quiz Tab -->
+        <div class="tab-content" ng-show="activeTab === 'join'">
+            <div class="form-container">
+                <h2>Join Quiz</h2>
+                <div class="input-group">
+                    <input type="text" 
+                           ng-model="joinData.code" 
+                           placeholder="Enter Quiz Code"
+                           class="form-input">
+                </div>
+                <div class="input-group">
+                    <input type="text" 
+                           ng-model="joinData.prn" 
+                           placeholder="Enter PRN"
+                           class="form-input">
+                </div>
+                <button class="submit-btn" ng-click="joinQuiz()">Enter Quiz</button>
+            </div>
+        </div>
+
+        <!-- Create Quiz Tab -->
+        <div class="tab-content" ng-show="activeTab === 'create'">
+            <div class="form-container">
+                <h2>Create New Quiz</h2>
+                <div class="input-group">
+                    <input type="text" 
+                           ng-model="newQuiz.title" 
+                           placeholder="Quiz Title"
+                           class="form-input">
+                </div>
+                <div class="input-group">
+                    <input type="datetime-local" 
+                           ng-model="newQuiz.startTime"
+                           class="form-input">
+                </div>
+                <div class="input-group">
+                    <input type="number" 
+                           ng-model="newQuiz.durationMinutes" 
+                           placeholder="Duration (minutes)"
+                           class="form-input">
+                </div>
+
+                <!-- Questions Section -->
+                <div class="questions-container">
+                    <div class="question-card" ng-repeat="question in newQuiz.questions">
+                        <h3>Question {{$index + 1}}</h3>
+                        <div class="input-group">
+                            <input type="text" 
+                                   ng-model="question.text" 
+                                   placeholder="Enter question text"
+                                   class="form-input">
+                        </div>
+
+                        <div class="options-container">
+                            <div class="option-group" ng-repeat="option in question.options track by $index">
+                                <input type="text" 
+                                       ng-model="question.options[$index]" 
+                                       placeholder="Option {{$index + 1}}"
+                                       class="form-input"
+                                       ng-keydown="checkAndAddOption(question, $event)">
+                                <button class="remove-option-btn" 
+                                        ng-click="removeOption(question, $index)"
+                                        ng-if="question.options.length > 1">×</button>
+                            </div>
+                            <button class="add-option-btn" 
+                                    ng-click="question.options.push('')"
+                                    ng-if="question.options.length < 6">
+                                + Add Option
+                            </button>
+                        </div>
+
+                        <div class="input-group">
+                            <select ng-model="question.correctAnswer" class="form-select">
+                                <option value="" disabled selected>Select Correct Answer</option>
+                                <option ng-repeat="option in question.options track by $index" 
+                                        value="{{$index}}">
+                                    Option {{$index + 1}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="add-btn" ng-click="addQuestion()">Add New Question</button>
+                    <button class="submit-btn" ng-click="createQuiz()">Create Quiz</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Taking View -->
+        <div ng-if="isJoined && !quizEnded" class="question-container">
+            <!-- Question Display -->
+            <div class="question-container" ng-if="questions && questions.length > 0">
+                <!-- Timer -->
+                <div class="timer" ng-if="timeRemaining">
+                    Time Remaining: {{ timeRemaining | date:'mm:ss' }}
+                </div>
+
+                <h3>Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}</h3>
+                <div class="question">{{ currentQuestion.question }}</div>
+                
+                <div class="options">
+                    <button class="option" 
+                            ng-repeat="option in currentQuestion.options"
+                            ng-class="{'selected': currentQuestion.selectedAnswer === $index}"
+                            ng-click="selectOption($index)">
+                        {{ option }}
+                    </button>
+                </div>
+
+                <div class="error-message" ng-if="submitError">{{ submitError }}</div>
+
+                <div class="button-group">
+                    <button class="submit-btn" 
+                            ng-click="submitAnswer()"
+                            ng-disabled="currentQuestion.selectedAnswer === null && currentQuestion.selectedAnswer !== 0">
+                        Submit Answer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz End Display -->
+        <div ng-if="quizEnded" class="quiz-end">
+            <h2>Quiz Completed!</h2>
+            <div class="final-score">
+                <div class="score-label">Your Final Score</div>
+                <div class="final-score-number">{{ finalScore || 0 }}</div>
+                <div class="completion-message">
+                    Great job completing the quiz!
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

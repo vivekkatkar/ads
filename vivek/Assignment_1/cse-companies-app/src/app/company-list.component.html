@@ -1,0 +1,28 @@
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Employee Count</th>
+            <th>Founded Year</th>
+            <th>Industry</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let company of companies">
+            <td>{{ company.name }}</td>
+            <td>{{ company.location }}</td>
+            <td>{{ company.employee_count }}</td>
+            <td>{{ company.founded_year }}</td>
+            <td>{{ company.industry }}</td>
+            <td>
+                <button (click)="onEdit(company)">Edit</button>
+                <button (click)="onDelete(company)">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<app-company-form *ngIf="selectedCompany" [company]="selectedCompany"
+    (companyUpdated)="onCompanyUpdated($event)"></app-company-form>

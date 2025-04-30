@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS CRUD</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: 20px auto;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .company-card {
+      background: white;
+      padding: 15px;
+      margin: 10px auto;
+      max-width: 400px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .company-details {
+      text-align: left;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    .action-buttons button {
+      width: auto;
+      height: auto;
+      padding: 8px 12px;
+      font-size: 14px;
+      background-color: #dc3545;
+    }
+    .action-buttons button:hover {
+      background-color: #c82333;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body ng-app="companyApp" ng-controller="CompanyController">
+  <h1>Kodars Klub</h1>
+
+
+  <form ng-submit="addCompany()">
+    <input type="text" ng-model="newCompany.name" placeholder="Name" required>
+    <input type="text" ng-model="newCompany.location" placeholder="Location" required>
+    <input type="number" ng-model="newCompany.employee_count" placeholder="Employee Count" required>
+    <input type="number" ng-model="newCompany.founded_year" placeholder="Founded Year" required>
+    <input type="text" ng-model="newCompany.industry" placeholder="Industry" required>
+    <button type="submit"><i class="fas fa-plus"></i> Add Company</button>
+  </form>
+
+
+  <h2>Employee</h2>
+  <div class="company-card" ng-repeat="company in companies">
+    <div class="company-details">
+      <strong>{{ company.name }}</strong><br>
+      {{ company.location }} - {{ company.industry }}
+    </div>
+    <div class="action-buttons">
+      <button ng-click="editCompany(company)"><i class="fas fa-edit"></i> Edit</button>
+      <button ng-click="deleteCompany(company._id)"><i class="fas fa-trash"></i> Delete</button>
+    </div>
+  </div>
+
+  <div class="edit-form" ng-if="editing">
+    <h2>Edit Company</h2>
+    <form ng-submit="updateCompany()">
+      <input type="text" ng-model="editingCompany.name" required>
+      <input type="text" ng-model="editingCompany.location" required>
+      <input type="number" ng-model="editingCompany.employee_count" required>
+      <input type="number" ng-model="editingCompany.founded_year" required>
+      <input type="text" ng-model="editingCompany.industry" required>
+      <button type="submit"><i class="fas fa-save"></i> Save Changes</button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

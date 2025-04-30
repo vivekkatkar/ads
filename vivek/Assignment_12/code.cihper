@@ -1,0 +1,48 @@
+// 1. Create Nodes for Persons
+CREATE (p1:Person {name: 'Alice', age: 30, city: 'New York'})
+CREATE (p2:Person {name: 'Bob', age: 25, city: 'San Francisco'})
+CREATE (p3:Person {name: 'Charlie', age: 35, city: 'Boston'})
+CREATE (p4:Person {name: 'Diana', age: 28, city: 'New York'})
+
+// 2. Create Relationships (FRIENDS_WITH)
+CREATE (p1)-[:FRIENDS_WITH {since: 2020}]->(p2)
+CREATE (p2)-[:FRIENDS_WITH {since: 2019}]->(p3)
+CREATE (p3)-[:FRIENDS_WITH {since: 2021}]->(p4)
+CREATE (p4)-[:FRIENDS_WITH {since: 2018}]->(p1)
+
+// 3. Create Nodes for Companies
+CREATE (c1:Company {name: 'TechCorp', industry: 'Technology', founded: 2010})
+CREATE (c2:Company {name: 'HealthInc', industry: 'Healthcare', founded: 2015})
+
+// 4. Create Relationships (WORKS_AT)
+CREATE (p1)-[:WORKS_AT {role: 'Developer', start_year: 2021}]->(c1)
+CREATE (p2)-[:WORKS_AT {role: 'Designer', start_year: 2022}]->(c1)
+CREATE (p3)-[:WORKS_AT {role: 'Manager', start_year: 2020}]->(c2)
+CREATE (p4)-[:WORKS_AT {role: 'Analyst', start_year: 2023}]->(c2)
+
+// 5. Query: Find all Persons and their Friends
+MATCH (p:Person)-[r:FRIENDS_WITH]->(f:Person)
+RETURN p.name AS Person, f.name AS Friend, r.since AS Since
+
+// 6. Query: Find all Persons working at a specific Company
+MATCH (p:Person)-[r:WORKS_AT]->(c:Company {name: 'TechCorp'})
+RETURN p.name AS Employee, r.role AS Role, c.name AS Company
+
+// 7. Query: Find Persons living in the same city
+MATCH (p1:Person)-[:FRIENDS_WITH]->(p2:Person)
+WHERE p1.city = p2.city
+RETURN p1.name AS Person1, p2.name AS Person2, p1.city AS City
+
+// 8. Update: Update a Person's age
+MATCH (p:Person {name: 'Alice'})
+SET p.age = 31
+RETURN p
+
+// 9. Delete: Remove a FRIENDS_WITH relationship
+MATCH (p1:Person {name: 'Alice'})-[r:FRIENDS_WITH]->(p2:Person {name: 'Bob'})
+DELETE r
+RETURN p1, p2
+
+// 10. Aggregation: Count number of employees per Company
+MATCH (p:Person)-[:WORKS_AT]->(c:Company)
+RETURN c.name AS Company, count(p) AS EmployeeCount

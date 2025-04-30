@@ -1,0 +1,19 @@
+<form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+    <label for="name">Name:</label>
+    <input id="name" formControlName="name">
+
+    <label for="location">Location:</label>
+    <input id="location" formControlName="location">
+
+    <label for="employee_count">Employee Count:</label>
+    <input id="employee_count" formControlName="employee_count" type="number">
+
+    <label for="founded_year">Founded Year:</label>
+    <input id="founded_year" formControlName="founded_year">
+
+    <label for="industry">Industry:</label>
+    <input id="industry" formControlName="industry">
+
+    <button type="submit">{{ isEditMode ? 'Update' : 'Submit' }}</button>
+    <button type="button" (click)="onDelete()" *ngIf="isEditMode">Delete</button>
+</form>

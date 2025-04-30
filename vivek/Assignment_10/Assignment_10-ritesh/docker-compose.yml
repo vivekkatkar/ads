@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  cassandra-seed:
+    image: cassandra:4.1
+    container_name: cassandra-seed
+    environment:
+      - CASSANDRA_CLUSTER_NAME=2025GRPXX
+      - CASSANDRA_NUM_TOKENS=256
+      - CASSANDRA_SEEDS=cassandra-seed
+      - CASSANDRA_DC=DC1
+    ports:
+      - "9042:9042"
+    networks:
+      cassandra_net:
+
+  cassandra-node1:
+    image: cassandra:4.1
+    container_name: cassandra-node1
+    environment:
+      - CASSANDRA_CLUSTER_NAME=2025GRPXX
+      - CASSANDRA_SEEDS=cassandra-seed
+      - CASSANDRA_DC=DC1
+    depends_on:
+      - cassandra-seed
+    networks:
+      cassandra_net:
+
+  cassandra-node2:
+    image: cassandra:4.1
+    container_name: cassandra-node2
+    environment:
+      - CASSANDRA_CLUSTER_NAME=2025GRPXX
+      - CASSANDRA_SEEDS=cassandra-seed
+      - CASSANDRA_DC=DC1
+    depends_on:
+      - cassandra-seed
+    networks:
+      cassandra_net:
+
+networks:
+  cassandra_net:
+    driver: bridge

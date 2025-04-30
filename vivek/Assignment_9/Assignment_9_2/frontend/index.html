@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="companyApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Company CRUD</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="app.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      padding: 40px;
+      margin: 0;
+      text-align: center;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    form {
+      background-color: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+    }
+    input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .company-card {
+      background-color: white;
+      padding: 15px;
+      margin: 10px auto;
+      max-width: 500px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+    .company-card p {
+      margin: 5px 0;
+    }
+    .action-buttons {
+      margin-top: 10px;
+    }
+    .delete-btn {
+      background-color: #dc3545;
+    }
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+    .update-btn {
+      background-color: #28a745;
+    }
+    .update-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body ng-controller="CompanyController">
+
+  <h1>Kodars Klub</h1>
+
+  <form ng-submit="addCompany()">
+    <input type="text" ng-model="newCompany.name" placeholder="Name" required />
+    <input type="text" ng-model="newCompany.location" placeholder="Location" required />
+    <input type="number" ng-model="newCompany.employee_count" placeholder="Employees" required />
+    <input type="number" ng-model="newCompany.founded_year" placeholder="Founded Year" required />
+    <input type="text" ng-model="newCompany.industry" placeholder="Industry" required />
+    <button type="submit">Add Company</button>
+  </form>
+
+  <div ng-if="editing">
+    <h2>Edit Company</h2>
+    <form ng-submit="updateCompany()">
+      <input type="text" ng-model="editingCompany.name" required />
+      <input type="text" ng-model="editingCompany.location" required />
+      <input type="number" ng-model="editingCompany.employee_count" required />
+      <input type="number" ng-model="editingCompany.founded_year" required />
+      <input type="text" ng-model="editingCompany.industry" required />
+      <button type="submit" class="update-btn">Update Company</button>
+    </form>
+  </div>
+
+  <h2>Companies</h2>
+  <div class="company-card" ng-repeat="company in companies">
+    <p><strong>{{ company.name }}</strong></p>
+    <p>{{ company.location }} - {{ company.industry }}</p>
+    <div class="action-buttons">
+      <button ng-click="editCompany(company)">Edit</button>
+      <button class="delete-btn" ng-click="deleteCompany(company.id)">Delete</button>
+    </div>
+  </div>
+
+</body>
+</html>

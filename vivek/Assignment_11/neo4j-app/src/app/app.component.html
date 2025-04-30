@@ -1,0 +1,51 @@
+<div class="container">
+  <h1>Academic Research Network Analyzer</h1>
+
+  <div class="two-column-container">
+    <div class="column">
+      <h3>Citation Network Analysis</h3>
+      <form [formGroup]="citationForm" (ngSubmit)="onCheckCitation()">
+        <label for="fromPaperId">Source Research Paper ID:</label>
+        <input id="fromPaperId" formControlName="fromPaperId" placeholder="Enter source paper ID" />
+
+        <label for="toPaperId">Target Research Paper ID:</label>
+        <input id="toPaperId" formControlName="toPaperId" placeholder="Enter target paper ID" />
+
+        <button type="submit" [disabled]="loading">Analyze Citation Path</button>
+      </form>
+      <p *ngIf="loading">Analyzing citation network...</p>
+      <pre *ngIf="citationResult">{{ citationResult }}</pre>
+    </div>
+
+  
+    <div class="column">
+      <h3>Research Paper Classification</h3>
+      <form [formGroup]="classificationForm" (ngSubmit)="onGetClassification()">
+        <label for="paperId">Research Paper ID:</label>
+        <input id="paperId" formControlName="paperId" placeholder="Enter paper ID" />
+        <button type="submit" [disabled]="loading">Get Classification</button>
+      </form>
+      <p *ngIf="loading">Retrieving classification...</p>
+      <pre *ngIf="classificationPath.length">
+        Classification Path: {{ classificationPath.join(' / ') }}
+      </pre>
+    </div>
+  </div>
+
+  <hr />
+
+  <h2>Advanced Query Analysis</h2>
+  <form [formGroup]="cypherForm" (ngSubmit)="onRunQuery()">
+    <label for="cypherQuery">Custom Neo4j Query:</label>
+    <textarea
+      id="cypherQuery"
+      formControlName="cypherQuery"
+      rows="5"
+      cols="50"
+      placeholder="Enter your Neo4j Cypher query (e.g., MATCH (n) RETURN n LIMIT 10)"
+    ></textarea>
+    <button type="submit" [disabled]="loading">Execute Query</button>
+  </form>
+  <p *ngIf="loading">Processing query...</p>
+  <pre *ngIf="customResult">{{ customResult | json }}</pre>
+</div>
