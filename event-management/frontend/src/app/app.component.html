@@ -1,0 +1,30 @@
+<form (ngSubmit)="addEvent()" enctype="multipart/form-data">
+  <input type="text" [(ngModel)]="event.title" name="title" placeholder="Title" required /><br />
+  <input type="text" [(ngModel)]="event.description" name="description" placeholder="Description" /><br />
+  <input type="datetime-local" [(ngModel)]="event.date" name="date" required /><br />
+  <input type="text" [(ngModel)]="event.location" name="location" placeholder="Location" required /><br />
+  <input type="file" (change)="onFileChange($event)" /><br />
+  <button type="submit">Add Event</button>
+</form>
+
+<div *ngFor="let ev of events">
+  <h3>{{ ev.title }}</h3>
+  <p>{{ ev.description }}</p>
+  <img *ngIf="ev.image" [src]="'http://localhost:3000' + ev.image" width="200" />
+
+  <hr />
+
+<h2>Events List</h2>
+<div *ngFor="let ev of events" class="card">
+  <h3>{{ ev.title }}</h3>
+  <p>{{ ev.description }}</p>
+  <p><strong>Date:</strong> {{ ev.date }}</p>
+  <p><strong>Location:</strong> {{ ev.location }}</p>
+  <img *ngIf="ev.image" [src]="'http://localhost:3000' + ev.image" width="200" /><br />
+
+  <button (click)="editEvent(ev)">Edit</button>
+  <button (click)="deleteEvent(ev.id)">Delete</button>
+</div>
+
+
+</div>
